@@ -75,6 +75,5 @@ async def _pingu(ctx):
 async def _exterminate(ctx):
     await ctx.send("Ooooh, you got me.")
     await bot.close()
-    quit()
 
 bot.run(token)
