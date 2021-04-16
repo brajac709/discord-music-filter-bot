@@ -71,4 +71,8 @@ bot.add_listener(on_message, 'on_message')
 async def _pingu(ctx):
     await ctx.send(f"Pew pew pew! I'm firin my command! ({bot.latency*1000}ms)")
 
+@slash.slash(name="EXTERMINATE", guild_ids=guild_ids)
+async def _exterminate(ctx):
+    quit()
+
 bot.run(token)
