@@ -69,6 +69,6 @@ bot.add_listener(on_message, 'on_message')
 
 @slash.slash(name="pingu", guild_ids=guild_ids)
 async def _pingu(ctx):
-    await ctx.send(f"Pew pew pew! I'm firin my command! ({client.latency*1000}ms)")
-    
+    await ctx.send(f"Pew pew pew! I'm firin my command! ({bot.latency*1000}ms)")
+
 bot.run(token)
