@@ -39,6 +39,7 @@ async def hello(ctx):
 def is_music_message(message):
     return len(message.embeds) > 0  or len(message.attachments) > 0
 
+@bot.listen()
 async def on_message(message):
     if message.author == bot.user:
         return
@@ -48,9 +49,9 @@ async def on_message(message):
         return
 
     if is_music_message(message):
-       # TODO Do stuff to it
         destChannel = discord.utils.get(message.guild.channels, name=destChannelName)
         if destChannel is None:
+            # TODO maybe just create the channel?
             await message.channel.send("ERROR: could not find channel " + destChannelName)
         else:
             embed = message.embeds[0] if (len(message.embeds) > 0) else None
@@ -63,9 +64,6 @@ async def on_message(message):
             #await destChannel.send(content=message.content, embed=message.embeds[0], file=fil)
             await destChannel.send(content=message.content, file=fil)
             await destChannel.send("You're some music, alright!")
-
-
-bot.add_listener(on_message, 'on_message')
 
 @slash.slash(name="pingu", guild_ids=guild_ids)
 async def _pingu(ctx):
