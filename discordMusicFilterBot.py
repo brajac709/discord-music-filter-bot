@@ -74,6 +74,7 @@ async def _pingu(ctx):
 @slash.slash(name="EXTERMINATE", guild_ids=guild_ids)
 async def _exterminate(ctx):
     await ctx.send("Ooooh, you got me.")
+    bot.close()
     quit()
 
 bot.run(token)
