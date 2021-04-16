@@ -31,4 +31,4 @@ $ python discordMusicFilterBot.py
 ```
 
 # Requirements
-Currently requires Python 3.7 - see #1 for more details
+Currently requires Python 3.7 - see [issue #1](https://github.com/brajac709/discord-music-filter-bot/issues/1) for more details
