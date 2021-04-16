@@ -51,4 +51,10 @@ for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
         bot.load_extension(f'cogs.{filename[0:-3]}')
 
+ListOfCogs = bot.cogs # this is a dictionary!
+print(len(ListOfCogs))
+    
+for NameOfCog,TheClassOfCog in ListOfCogs.items(): # we can loop trough it!
+	print(NameOfCog)
+
 bot.run(token)
