@@ -48,6 +48,8 @@ async def reload(ctx: Context, extension):
     bot.load_extension(f'cogs.{extension}')
     await ctx.send("Reboot complete")
 
-
+for filename in os.listdir('./cogs'):
+    if filename.endswith('.py'):
+        bot.load_extension(f'cogs.{filename[0:-3]}')
 
 bot.run(token)

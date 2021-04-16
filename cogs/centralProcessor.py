@@ -20,7 +20,7 @@ class Chassis(commands.Cog):
     def is_music_message(message):
         return len(message.embeds) > 0  or len(message.attachments) > 0
 
-    @bot.listen()
+    @commands.Cog.listener()
     async def on_message(self, message):
         if message.author == self.bot.user:
             return
