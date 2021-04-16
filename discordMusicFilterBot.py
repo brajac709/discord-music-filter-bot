@@ -28,16 +28,17 @@ async def hello(ctx):
     """Prints 'Hello' in the channel"""
     await ctx.send('Hello!')
 
-@bot.event
+def is_music_message(message):
+    return len(message.embeds) > 0  or len(message.attachments) > 0
+
 async def on_message(message):
     if message.author == bot.user:
         return
 
     if is_music_message(message):
-        # TODO Do stuff to it
-        await ctx.send("You're some music, alright!")
+       # TODO Do stuff to it
+        await message.channel.send("You're some music, alright!")
 
-def is_music_message(message):
-    return len(message.embeds) > 0  or len(message.attachments) > 0
+bot.add_listener(on_message, 'on_message')
 
 bot.run(token)
