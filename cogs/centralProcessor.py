@@ -10,7 +10,7 @@ class Chassis(commands.Cog):
 
     @bot.event
     async def on_ready():
-        print('Logged in as {0.user}'.format(bot))
+        print('Logged in as {0.user}'.format(self.bot))
 
     @bot.command()
     async def hello(ctx):
@@ -22,7 +22,7 @@ class Chassis(commands.Cog):
 
     @bot.listen()
     async def on_message(message):
-        if message.author == bot.user:
+        if message.author == self.bot.user:
             return
 
         #  TODO there might be a better way to handle this in the Bot class - investigate
@@ -48,12 +48,12 @@ class Chassis(commands.Cog):
 
     @slash.slash(name="pingu", guild_ids=guild_ids)
     async def _pingu(ctx):
-        await ctx.send(f"Pew pew pew! I'm firin my command! ({bot.latency*1000}ms)")
+        await ctx.send(f"Pew pew pew! I'm firin my command! ({self.bot.latency*1000}ms)")
 
     @slash.slash(name="EXTERMINATE", guild_ids=guild_ids)
     async def _exterminate(ctx):
         await ctx.send("Ooooh, you got me.")
-        await bot.close()
+        await self.bot.close()
 
 def setup(bot):
-    bot.add_cog(Chassis(bot))
+    self.bot.add_cog(Chassis(self.bot))
