@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from discord_slash import SlashCommand
+from discord_slash import cog_ext, SlashContext
 
 class Chassis(commands.Cog):
     def __init__(self, bot):
@@ -9,7 +9,7 @@ class Chassis(commands.Cog):
     guild_ids = [832413087092178944]
 
     @commands.Cog.listener()
-    async def on_ready():
+    async def on_ready(self):
         print('Logged in as {0.user}'.format(self.bot))
 
     @commands.command()
@@ -46,12 +46,14 @@ class Chassis(commands.Cog):
                 await destChannel.send(content=message.content, file=fil)
                 await destChannel.send("You're some music, alright!")
 
-    @slash.slash(self, name="pingu", guild_ids=guild_ids)
-    async def _pingu(ctx):
+    #@slash.slash(self, name="pingu", guild_ids=guild_ids)
+    @cog_ext.cog_slash(name="pingu", guild_ids=guild_ids)
+    async def _pingu(self, ctx):
         await ctx.send(f"Pew pew pew! I'm firin my command! ({self.bot.latency*1000}ms)")
 
-    @slash.slash(self, name="EXTERMINATE", guild_ids=guild_ids)
-    async def _exterminate(ctx):
+    #@slash.slash(self, name="EXTERMINATE", guild_ids=guild_ids)
+    @cog_ext.cog_slash(name="EXTERMINATE", guild_ids=guild_ids)
+    async def _exterminate(self, ctx):
         await ctx.send("Ooooh, you got me.")
         await self.bot.close()
 

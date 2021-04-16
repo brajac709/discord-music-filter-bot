@@ -28,7 +28,6 @@ TODO
 intents = discord.Intents.default()
 
 bot = commands.Bot(command_prefix='!', description=botDesc, intents=intents)
-slash = SlashCommand(bot, sync_commands=True)
 
 @bot.command()
 async def load(ctx: Context, extension):
