@@ -1,6 +1,7 @@
 # My Package Ignores
 tokenfile.txt
 discord_backup_codes.txt
+database.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
