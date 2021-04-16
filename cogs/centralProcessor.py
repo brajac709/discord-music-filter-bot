@@ -8,11 +8,11 @@ class Chassis(commands.Cog):
 
     guild_ids = [832413087092178944]
 
-    @bot.event
+    @commands.Cog.listener()
     async def on_ready():
         print('Logged in as {0.user}'.format(self.bot))
 
-    @bot.command()
+    @commands.command()
     async def hello(ctx):
         """Prints 'Hello' in the channel"""
         await ctx.send('Hello!')
