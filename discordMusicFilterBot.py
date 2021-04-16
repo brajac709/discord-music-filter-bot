@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from discord_slash import SlashCommand
 
 with open('tokenfile.txt','r') as f:
     token = f.read()
@@ -17,7 +18,9 @@ TODO
 intents = discord.Intents.default()
 
 bot = commands.Bot(command_prefix='!', description=botDesc, intents=intents)
+slash = SlashCommand(bot, sync_commands=True)
 
+guild_ids = [832413087092178944]
 
 @bot.event
 async def on_ready():
@@ -41,4 +44,8 @@ async def on_message(message):
 
 bot.add_listener(on_message, 'on_message')
 
+@slash.slash(name="pingu", guild_ids=guild_ids)
+async def _pingu(ctx):
+    await ctx.send(f"Pew pew pew! I'm firin my command! ({client.latency*1000}ms)")
+    
 bot.run(token)
