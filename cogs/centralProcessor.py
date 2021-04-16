@@ -13,7 +13,7 @@ class Chassis(commands.Cog):
         print('Logged in as {0.user}'.format(self.bot))
 
     @commands.command()
-    async def hello(ctx):
+    async def hello(self, ctx):
         """Prints 'Hello' in the channel"""
         await ctx.send('Hello!')
 
@@ -21,7 +21,7 @@ class Chassis(commands.Cog):
         return len(message.embeds) > 0  or len(message.attachments) > 0
 
     @bot.listen()
-    async def on_message(message):
+    async def on_message(self, message):
         if message.author == self.bot.user:
             return
 
@@ -46,14 +46,14 @@ class Chassis(commands.Cog):
                 await destChannel.send(content=message.content, file=fil)
                 await destChannel.send("You're some music, alright!")
 
-    @slash.slash(name="pingu", guild_ids=guild_ids)
+    @slash.slash(self, name="pingu", guild_ids=guild_ids)
     async def _pingu(ctx):
         await ctx.send(f"Pew pew pew! I'm firin my command! ({self.bot.latency*1000}ms)")
 
-    @slash.slash(name="EXTERMINATE", guild_ids=guild_ids)
+    @slash.slash(self, name="EXTERMINATE", guild_ids=guild_ids)
     async def _exterminate(ctx):
         await ctx.send("Ooooh, you got me.")
         await self.bot.close()
 
 def setup(bot):
-    self.bot.add_cog(Chassis(self.bot))
+    bot.add_cog(Chassis(bot))
