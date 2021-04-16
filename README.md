@@ -29,3 +29,6 @@ $ pip install -r requirements.txt
 ```
 $ python discordMusicFilterBot.py
 ```
+
+# Requirements
+Currently requires Python 3.7 - see [issue #1](https://github.com/brajac709/discord-music-filter-bot/issues/1) for more details
