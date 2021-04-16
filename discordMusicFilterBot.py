@@ -1,4 +1,5 @@
 import discord
+from discord.ext import commands
 
 with open('tokenfile.txt','r') as f:
     token = f.read()
@@ -6,19 +7,37 @@ with open('tokenfile.txt','r') as f:
 if (token is None):
     raise RuntimeError('Cannot read token from tokenfile.txt')
 
+botDesc = '''A bot to filter linked music in one channel, add to another and playback on demand
 
-client = discord.Client()
+Supports the following commands
+TODO
 
-@client.event
+'''
+
+intents = discord.Intents.default()
+
+bot = commands.Bot(command_prefix='!', description=botDesc, intents=intents)
+
+
+@bot.event
 async def on_ready():
-    print('Logged in as {0.user}'.format(client))
+    print('Logged in as {0.user}'.format(bot))
 
-@client.event
+@bot.command()
+async def hello(ctx):
+    """Prints 'Hello' in the channel"""
+    await ctx.send('Hello!')
+
+@bot.event
 async def on_message(message):
-    if message.author == client.user:
+    if message.author == bot.user:
         return
 
-    if message.content.startswith('$hello'):
-        await message.channel.send('Hello!')
+    if is_music_message(message):
+        # TODO Do stuff to it
+        await ctx.send("You're some music, alright!")
 
-client.run(token)
+def is_music_message(message):
+    return len(message.embeds) > 0  or len(message.attachments) > 0
+
+bot.run(token)
