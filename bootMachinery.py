@@ -44,6 +44,7 @@ async def unload(ctx: Context, extension):
 async def reload(ctx: Context, extension):
     bot.unload_extension(f'cogs.{extension}')
     bot.load_extension(f'cogs.{extension}')
+    print('----- Reboot complete ------')
     await ctx.send("Reboot complete")
 
 for filename in os.listdir('./cogs'):

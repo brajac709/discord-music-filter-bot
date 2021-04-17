@@ -2,13 +2,14 @@ import discord
 from discord.ext import commands
 from discord_slash import cog_ext, SlashContext
 
+listenerChannelName = 'music'
+destChannelName = 'music-aggregation'
+
+guild_ids = [832413087092178944]
+
 class Chassis(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-
-    listenerChannelName = 'music'
-    destChannelName = 'music-aggregation'
-    guild_ids = [832413087092178944]
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -19,7 +20,7 @@ class Chassis(commands.Cog):
         """Prints 'Hello' in the channel"""
         await ctx.send('Hello!')
 
-    def is_music_message(message):
+    def is_music_message(self, message):
         return len(message.embeds) > 0  or len(message.attachments) > 0
 
     @commands.Cog.listener()
@@ -28,14 +29,14 @@ class Chassis(commands.Cog):
             return
 
         #  TODO there might be a better way to handle this in the Bot class - investigate
-        if message.channel.name != Chassis.listenerChannelName:
+        if message.channel.name != listenerChannelName:
             return
 
-        if is_music_message(message):
-            destChannel = discord.utils.get(message.guild.channels, name=Chassis.destChannelName)
+        if self.is_music_message(message):
+            destChannel = discord.utils.get(message.guild.channels, name=destChannelName)
             if destChannel is None:
                 # TODO maybe just create the channel?
-                await message.channel.send("ERROR: could not find channel " + Chassis.destChannelName)
+                await message.channel.send("ERROR: could not find channel " + destChannelName)
             else:
                 embed = message.embeds[0] if (len(message.embeds) > 0) else None
                 # for now support single file attachment
