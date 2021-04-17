@@ -70,6 +70,14 @@ class Chassis(commands.Cog):
     async def on_ready(self):
         print('Logged in as {0.user}'.format(self.bot))
 
+    @commands.Cog.listener()
+    async def on_voice_state_update(self, member, before, after):
+        channel = bot.get_channel(832413087608340480)
+        members = channel.get_members()
+        if not members:
+            print(":'( I'm so lonely")
+            # TODO when brady add's a stop method, call it
+
     @commands.command()
     async def hello(self, ctx):
         """Prints 'Hello' in the channel"""
