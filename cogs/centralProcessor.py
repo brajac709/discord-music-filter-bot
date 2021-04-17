@@ -75,7 +75,7 @@ class Chassis(commands.Cog):
         """Prints 'Hello' in the channel"""
         await ctx.send('Hello!')
 
-
+    # TODO make sure download and play, whatever library, are using hardware accelerated transcoding
     @commands.command()
     async def play(self, ctx, *, id):
         print(id)
