@@ -18,6 +18,7 @@ class TextDatabase(AbstractDatabase):
         self.delimiter = ','
 
 
+    # TODO support loose search (contains)
     def searchMusic(self,id):
         theMusic = []
         with open(self.database_file, 'r') as f:

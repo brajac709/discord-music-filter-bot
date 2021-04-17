@@ -3,11 +3,62 @@ from discord.ext import commands
 from discord_slash import cog_ext, SlashContext
 import musicDatabase as db
 import json
+import youtube_dl
 
 listenerChannelName = 'music'
 destChannelName = 'music-aggregation'
 
 guild_ids = [832413087092178944]
+
+
+#copied from https://stackoverflow.com/questions/56060614/how-to-make-a-discord-bot-play-youtube-audio
+# TODO separate this into another module probably
+youtube_dl.utils.bug_reports_message = lambda: ''
+
+
+ytdl_format_options = {
+    'format': 'bestaudio/best',
+    'outtmpl': '%(extractor)s-%(id)s-%(title)s.%(ext)s',
+    'restrictfilenames': True,
+    'noplaylist': True,
+    'nocheckcertificate': True,
+    'ignoreerrors': False,
+    'logtostderr': False,
+    'quiet': True,
+    'no_warnings': True,
+    'default_search': 'auto',
+    'source_address': '0.0.0.0' # bind to ipv4 since ipv6 addresses cause issues sometimes
+}
+
+ffmpeg_options = {
+    'options': '-vn'
+}
+
+ytdl = youtube_dl.YoutubeDL(ytdl_format_options)
+
+class YTDLSource(discord.PCMVolumeTransformer):
+    def __init__(self, source, *, data, volume=0.5):
+        super().__init__(source, volume)
+
+        self.data = data
+
+        self.title = data.get('title')
+        self.url = data.get('url')
+
+    @classmethod
+    async def from_url(cls, url, *, loop=None, stream=False):
+        loop = loop or asyncio.get_event_loop()
+        data = await loop.run_in_executor(None, lambda: ytdl.extract_info(url, download=not stream))
+
+        if 'entries' in data:
+            # take first item from a playlist
+            data = data['entries'][0]
+
+        filename = data['url'] if stream else ytdl.prepare_filename(data)
+        return cls(discord.FFmpegPCMAudio(filename, **ffmpeg_options), data=data)
+# END Youtube handler
+
+
 
 class Chassis(commands.Cog):
     def __init__(self, bot):
@@ -23,6 +74,39 @@ class Chassis(commands.Cog):
     async def hello(self, ctx):
         """Prints 'Hello' in the channel"""
         await ctx.send('Hello!')
+
+
+    @commands.command()
+    async def play(self, ctx, *, id):
+        print(id)
+        music = self.database.searchMusic(id)
+        if len(music) == 0:
+            return
+        music = music[0]
+
+        # Connect to the voice channel and play 
+        server = ctx.message.guild
+        # grab the 1st one for now.  later may want to join the channel of the author of the command
+        voice_channel = server.voice_channels[0] if len(server.voice_channels) > 0 else None
+
+        if voice_channel is None:
+            await ctx.send('No valid voice channels')
+        else:
+            vc = ctx.voice_client
+            if vc:
+                if (vc.channel.id != voice_channel.id):
+                    # not joined yet
+                    await vc.move_to(voice_channel)
+            else:
+                await voice_channel.connect()
+
+            async with ctx.typing():
+                vc = ctx.voice_client
+                if vc:
+                    player = await YTDLSource.from_url(music["url"], loop=self.bot.loop)
+                    vc.play(player)
+            await ctx.send('Now Playing: {}'.format(player.title))
+
 
     def is_music_message(self, message):
         return len(message.embeds) > 0  or len(message.attachments) > 0

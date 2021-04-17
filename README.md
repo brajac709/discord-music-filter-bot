@@ -25,7 +25,8 @@ or for Windows
 $ pip install -r requirements.txt
 ```
 5. Ask project owner for access token. Copy it to the file `tokenfile.txt`
-6. Run the project:
+6. Install ffmpeg and add to system path
+7. Run the project:
 ```
 $ python discordMusicFilterBot.py
 ```

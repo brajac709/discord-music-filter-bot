@@ -2,6 +2,7 @@
 tokenfile.txt
 discord_backup_codes.txt
 database.txt
+*.m4a
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
