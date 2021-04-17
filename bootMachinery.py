@@ -5,6 +5,7 @@ from discord_slash import SlashCommand
 from discord.ext import commands
 from discord.ext.commands import Context
 from dotenv import load_dotenv, find_dotenv
+import datetime
 
 load_dotenv(find_dotenv())
 
@@ -41,10 +42,13 @@ async def unload(ctx: Context, extension):
 
 
 @bot.command()
-async def reload(ctx: Context, extension):
+async def reload(ctx: Context, extension=None):
+    if (extension is None):
+        extension = 'centralProcessor'
     bot.unload_extension(f'cogs.{extension}')
     bot.load_extension(f'cogs.{extension}')
-    print('----- Reboot complete ------')
+    # TODO add timestamp
+    print('{0}:  ----- Reboot complete ------'.format(datetime.datetime.now()))
     await ctx.send("Reboot complete")
 
 for filename in os.listdir('./cogs'):
