@@ -48,12 +48,12 @@ class Chassis(commands.Cog):
 
     #@slash.slash(self, name="pingu", guild_ids=guild_ids)
     @cog_ext.cog_slash(name="pingu", guild_ids=guild_ids)
-    async def _pingu(self, ctx):
-        await ctx.send(f"Pew pew pew! I'm firin my command! ({self.bot.latency*1000}ms)")
+    async def _pingu(self, ctx: SlashContext):
+        await ctx.send(content=f"Pew pew pew! I'm firin my command! ({self.bot.latency*1000}ms)")
 
     #@slash.slash(self, name="EXTERMINATE", guild_ids=guild_ids)
     @cog_ext.cog_slash(name="EXTERMINATE", guild_ids=guild_ids)
-    async def _exterminate(self, ctx):
+    async def _exterminate(self, ctx: SlashContext):
         await ctx.send("Ooooh, you got me.")
         await self.bot.close()
 
