@@ -16,8 +16,6 @@ if (token is None):
     raise RuntimeError('Cannot read token from tokenfile.txt')
 
 # Default channel names
-listenerChannelName = 'music'
-destChannelName = 'music-aggregation'
 
 botDesc = '''A bot to filter linked music in one channel, add to another and playback on demand
 
@@ -28,6 +26,7 @@ TODO
 intents = discord.Intents.default()
 
 bot = commands.Bot(command_prefix='!', description=botDesc, intents=intents)
+slash = SlashCommand(bot, override_type = True)
 
 @bot.command()
 async def load(ctx: Context, extension):

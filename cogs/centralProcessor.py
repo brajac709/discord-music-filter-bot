@@ -6,6 +6,8 @@ class Chassis(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    listenerChannelName = 'music'
+    destChannelName = 'music-aggregation'
     guild_ids = [832413087092178944]
 
     @commands.Cog.listener()
