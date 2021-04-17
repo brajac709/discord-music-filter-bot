@@ -28,14 +28,14 @@ class Chassis(commands.Cog):
             return
 
         #  TODO there might be a better way to handle this in the Bot class - investigate
-        if message.channel.name != listenerChannelName:
+        if message.channel.name != Chassis.listenerChannelName:
             return
 
         if is_music_message(message):
-            destChannel = discord.utils.get(message.guild.channels, name=destChannelName)
+            destChannel = discord.utils.get(message.guild.channels, name=Chassis.destChannelName)
             if destChannel is None:
                 # TODO maybe just create the channel?
-                await message.channel.send("ERROR: could not find channel " + destChannelName)
+                await message.channel.send("ERROR: could not find channel " + Chassis.destChannelName)
             else:
                 embed = message.embeds[0] if (len(message.embeds) > 0) else None
                 # for now support single file attachment
