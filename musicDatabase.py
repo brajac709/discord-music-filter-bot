@@ -1,5 +1,6 @@
 
 import abc
+import io
 
 class AbstractDatabase(abc.ABC):
     @abc.abstractmethod
@@ -41,7 +42,8 @@ class TextDatabase(AbstractDatabase):
 
     def addMusic(self, id, url=None, file=None):
         # TODO add duplicate detection
-        with open(self.database_file, 'w+') as f:
+        with open(self.database_file, 'a') as f:
+            f.seek(0,io.SEEK_END)
             f.write('"{0}","false","{1}",\n'.format(id, url))
             
 
