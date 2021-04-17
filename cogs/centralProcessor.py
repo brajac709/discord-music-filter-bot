@@ -1,6 +1,8 @@
 import discord
 from discord.ext import commands
 from discord_slash import cog_ext, SlashContext
+import musicDatabase as db
+import json
 
 listenerChannelName = 'music'
 destChannelName = 'music-aggregation'
@@ -10,6 +12,8 @@ guild_ids = [832413087092178944]
 class Chassis(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        # TODO use TextDatabase for now.  change to SQL implementation later
+        self.database = db.TextDatabase() 
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -47,6 +51,9 @@ class Chassis(commands.Cog):
                 # maybe ther's a better way to copy it. For now only support file attachments
                 #await destChannel.send(content=message.content, embed=message.embeds[0], file=fil)
                 await destChannel.send(content=message.content, file=fil)
+                #TODO for now text database only supports urls, not attachments
+                if (embed is not None):
+                    self.database.addMusic(embed.title, embed.url)
                 await destChannel.send("You're some music, alright!")
 
     #@slash.slash(self, name="pingu", guild_ids=guild_ids)

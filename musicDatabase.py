@@ -39,6 +39,7 @@ class TextDatabase(AbstractDatabase):
         return theMusic
 
     def addMusic(self, id, url=None, file=None):
+        # TODO add duplicate detection
         with open(self.database_file, 'w+') as f:
             f.write('"{0}","false","{1}",\n'.format(id, url))
             
