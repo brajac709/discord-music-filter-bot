@@ -19,7 +19,7 @@ youtube_dl.utils.bug_reports_message = lambda: ''
 
 ytdl_format_options = {
     'format': 'bestaudio/best',
-    'outtmpl': '%(extractor)s-%(id)s-%(title)s.%(ext)s',
+    'outtmpl': 'downloads/%(extractor)s-%(id)s-%(title)s.%(ext)s',
     'restrictfilenames': True,
     'noplaylist': True,
     'nocheckcertificate': True,
@@ -32,31 +32,55 @@ ytdl_format_options = {
 }
 
 ffmpeg_options = {
+    'before_options': '-nostdin',
     'options': '-vn'
 }
 
 ytdl = youtube_dl.YoutubeDL(ytdl_format_options)
 
 class YTDLSource(discord.PCMVolumeTransformer):
-    def __init__(self, source, *, data, volume=0.5):
+    def __init__(self, source, *, data, volume=0.5, requester):
         super().__init__(source, volume)
 
         self.data = data
+        self.requester = requester
 
         self.title = data.get('title')
         self.url = data.get('url')
+        self.web_url = data.get('webpage_url')
 
     @classmethod
-    async def from_url(cls, url, *, loop=None, stream=False):
+    async def from_url(cls, ctx, url, *, loop=None, stream=True, playnow=True):
         loop = loop or asyncio.get_event_loop()
-        data = await loop.run_in_executor(None, lambda: ytdl.extract_info(url, download=not stream))
+        data = await loop.run_in_executor(None, lambda: ytdl.extract_info(url=url, download=not stream))
 
         if 'entries' in data:
             # take first item from a playlist
             data = data['entries'][0]
 
-        filename = data['url'] if stream else ytdl.prepare_filename(data)
-        return cls(discord.FFmpegPCMAudio(filename, **ffmpeg_options), data=data)
+        if stream and not playnow:
+            # store just enough info to retrieve the stream again and queue metadata
+            return {'webpage_url': data['webpage_url'], 'requester': ctx.author, 'title': data['title']}
+        else:
+            # TODO not sure why it only plays half the stream
+            filename = data['url'] if stream else ytdl.prepare_filename(data) 
+            return cls(discord.FFmpegPCMAudio(filename, **ffmpeg_options), data=data, requester=ctx.author)
+
+    @classmethod
+    async def prepare_stream(cls, data, *, loop):
+        """ Youtube stream links expire, so prepare the stream"""
+        loop = loop or asyncio.get_event_loop()
+        if isinstance(data, cls):
+            requester = data.requester
+            web_url = data.web_url
+        else:
+            requester = data['requester']
+            web_url = data['webpage_url']
+
+        data = await loop.run_in_executor(None, lambda: ytdl.extract_info(url=web_url, download=False))
+
+        return cls(discord.FFmpegPCMAudio(data['url'], **ffmpeg_options), data=data, requester=requester)
+
 # END Youtube handler
 
 
@@ -112,7 +136,7 @@ class Chassis(commands.Cog):
             async with ctx.typing():
                 musicChannel = ctx.voice_client
                 if musicChannel:
-                    player = await YTDLSource.from_url(music["url"], loop=self.bot.loop)
+                    player = await YTDLSource.from_url(ctx, music["url"], loop=self.bot.loop)
                     musicChannel.play(player)
             await ctx.send('Now Playing: {}'.format(player.title))
 
