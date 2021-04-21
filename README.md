@@ -28,7 +28,7 @@ $ pip install -r requirements.txt
 6. Install ffmpeg and add to system path
 7. Run the project:
 ```
-$ python discordMusicFilterBot.py
+$ python bootMachinery.py
 ```
 
 # Requirements
