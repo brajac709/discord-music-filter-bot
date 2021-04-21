@@ -45,8 +45,7 @@ async def unload(ctx: Context, extension):
 async def reload(ctx: Context, extension=None):
     if (extension is None):
         extension = 'centralProcessor'
-    bot.unload_extension(f'cogs.{extension}')
-    bot.load_extension(f'cogs.{extension}')
+    bot.reload_extension(f'cogs.{extension}')
     # TODO add timestamp
     print('{0}:  ----- Reboot complete ------'.format(datetime.datetime.now()))
     await ctx.send("Reboot complete")

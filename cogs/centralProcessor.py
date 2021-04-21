@@ -35,6 +35,7 @@ ffmpeg_options = {
 }
 
 ytdl = youtube_dl.YoutubeDL(ytdl_format_options)
+musicChannel = None
 
 class YTDLSource(discord.PCMVolumeTransformer):
     def __init__(self, source, *, data, volume=0.5):
@@ -72,7 +73,7 @@ class Chassis(commands.Cog):
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
-        channel = bot.get_channel(832413087608340480)
+        channel = self.bot.get_channel(832413087608340480)
         members = channel.get_members()
         if not members:
             print(":'( I'm so lonely")
@@ -100,21 +101,26 @@ class Chassis(commands.Cog):
         if voice_channel is None:
             await ctx.send('No valid voice channels')
         else:
-            vc = ctx.voice_client
-            if vc:
-                if (vc.channel.id != voice_channel.id):
+            musicChannel = ctx.voice_client
+            if musicChannel:
+                if (musicChannel.channel.id != voice_channel.id):
                     # not joined yet
-                    await vc.move_to(voice_channel)
+                    await musicChannel.move_to(voice_channel)
             else:
                 await voice_channel.connect()
 
             async with ctx.typing():
-                vc = ctx.voice_client
-                if vc:
+                musicChannel = ctx.voice_client
+                if musicChannel:
                     player = await YTDLSource.from_url(music["url"], loop=self.bot.loop)
-                    vc.play(player)
+                    musicChannel.play(player)
             await ctx.send('Now Playing: {}'.format(player.title))
 
+    @commands.command()
+    async def stop(self, ctx, *, id):
+        ctx.voice_client.stop()
+        musicChannel.disconnect()
+        await ctx.send("Going dark...")
 
     def is_music_message(self, message):
         return len(message.embeds) > 0  or len(message.attachments) > 0
