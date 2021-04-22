@@ -118,7 +118,7 @@ class Chassis(commands.Cog):
 
     @commands.command()
     async def stop(self, ctx):
-        await musicChannel.stop()
+        await ctx.voice_client.stop()
         await musicChannel.disconnect()
         await ctx.send("Going dark...")
 
