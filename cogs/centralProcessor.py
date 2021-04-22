@@ -4,6 +4,7 @@ from discord_slash import cog_ext, SlashContext
 import musicDatabase as db
 import json
 import youtube_dl
+import sys, io
 
 listenerChannelName = 'music'
 destChannelName = 'music-aggregation'
@@ -164,4 +165,14 @@ class Chassis(commands.Cog):
         await self.bot.close()
 
 def setup(bot):
+    f = open('logfile.txt','a')
+    f.seek(0,io.SEEK_END)
+    sys.stdout = f
+    sys.stderr = f
     bot.add_cog(Chassis(bot))
+
+def teardown(bot):
+    sys.stdout.close()
+    sys.stderr.close()
+    sys.stdout = sys.__stdout__
+    sys.stderr = sys.__stderr__
