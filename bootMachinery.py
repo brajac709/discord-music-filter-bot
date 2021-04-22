@@ -7,8 +7,23 @@ from discord.ext import commands
 from discord.ext.commands import Context
 from dotenv import load_dotenv, find_dotenv
 import datetime
+import sys,io
 
 load_dotenv(find_dotenv())
+
+def setOutput():
+    f = open('logfile.txt','a')
+    f.seek(0,io.SEEK_END)
+    sys.stdout = f
+    sys.stderr = f
+
+def resetOutput():
+    sys.stdout.close()
+    #sys.stderr.close()  # since they're the same file don't close twice???
+    sys.stdout = sys.__stdout__
+    sys.stderr = sys.__stderr__
+
+setOutput()
 
 # Inject the Access token
 with open('tokenfile.txt','r') as f:
@@ -69,3 +84,5 @@ for NameOfCog,TheClassOfCog in ListOfCogs.items(): # we can loop trough it!
 	print(NameOfCog)
 
 bot.run(token)
+
+resetOutput()
