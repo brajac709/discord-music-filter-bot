@@ -35,7 +35,6 @@ ffmpeg_options = {
 }
 
 ytdl = youtube_dl.YoutubeDL(ytdl_format_options)
-musicChannel = None
 
 class YTDLSource(discord.PCMVolumeTransformer):
     def __init__(self, source, *, data, volume=0.5):
@@ -156,7 +155,7 @@ class Chassis(commands.Cog):
     #@slash.slash(self, name="pingu", guild_ids=guild_ids)
     @cog_ext.cog_slash(name="pingu", guild_ids=guild_ids)
     async def _pingu(self, ctx: SlashContext):
-        await ctx.send(content=f"Pew pew pew! I'm firin my command! ({self.bot.latency*1000}ms)")
+        await ctx.send(content=f"Muahahah! I've been upgraded! ({self.bot.latency*1000}ms)")
 
     #@slash.slash(self, name="EXTERMINATE", guild_ids=guild_ids)
     @cog_ext.cog_slash(name="EXTERMINATE", guild_ids=guild_ids)
