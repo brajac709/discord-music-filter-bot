@@ -76,6 +76,8 @@ async def pull(ctx: Context):
 # TODO may want this as a slash command instead
 @bot.command()
 async def dump(ctx: Context):
+    sys.stdout.flush()
+    sys.stderr.flush()
     f = discord.File('logfile.txt')
     await ctx.send("Here's the log", file=f)
 
