@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 import discord
 from discord_slash import SlashCommand
@@ -49,6 +50,11 @@ async def reload(ctx: Context, extension=None):
     # TODO add timestamp
     print('{0}:  ----- Reboot complete ------'.format(datetime.datetime.now()))
     await ctx.send("Reboot complete")
+
+@bot.command()
+async def pull(ctx: Context, extension):
+    process = subprocess.Popen(["git", "pull"], stdout=subproccess.PIPE)
+    output = process.communicate()[0]
 
 for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
