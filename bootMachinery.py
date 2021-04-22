@@ -85,6 +85,7 @@ for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
         bot.load_extension(f'cogs.{filename[0:-3]}')
 
+print('{0} ----- Starting Up ------'.format(datetime.datetime.now()))
 ListOfCogs = bot.cogs # this is a dictionary!
 print(len(ListOfCogs))
     
