@@ -52,9 +52,9 @@ async def reload(ctx: Context, extension=None):
     await ctx.send("Reboot complete")
 
 @bot.command()
-async def pull(ctx: Context, extension):
+async def pull(ctx: Context):
     print('pulling....')
-    process = subprocess.Popen(["git", "pull"], stdout=subproccess.PIPE)
+    process = subprocess.Popen(["git", "pull"], stdout=subprocess.PIPE)
     output = process.communicate()[0]
     print('pull')
 
