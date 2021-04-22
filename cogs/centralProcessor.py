@@ -74,7 +74,7 @@ class Chassis(commands.Cog):
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
         channel = self.bot.get_channel(832413087608340480)
-        members = channel.get_members()
+        members = channel.members
         if not members:
             print(":'( I'm so lonely")
             # TODO when brady add's a stop method, call it
@@ -118,8 +118,8 @@ class Chassis(commands.Cog):
 
     @commands.command()
     async def stop(self, ctx, *, id):
-        ctx.voice_client.stop()
-        musicChannel.disconnect()
+        await ctx.voice_client.stop()
+        await musicChannel.disconnect()
         await ctx.send("Going dark...")
 
     def is_music_message(self, message):
