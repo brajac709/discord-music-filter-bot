@@ -53,8 +53,10 @@ async def reload(ctx: Context, extension=None):
 
 @bot.command()
 async def pull(ctx: Context, extension):
+    print('pulling....')
     process = subprocess.Popen(["git", "pull"], stdout=subproccess.PIPE)
     output = process.communicate()[0]
+    print('pull')
 
 for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
