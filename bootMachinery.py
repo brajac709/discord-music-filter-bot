@@ -73,6 +73,12 @@ async def pull(ctx: Context):
     output = process.communicate()[0]
     print('pull')
 
+# TODO may want this as a slash command instead
+@bot.command()
+async def dump(ctx: Context):
+    f = discord.File('logfile.txt')
+    await ctx.send("Here's the log", file=f)
+
 for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
         bot.load_extension(f'cogs.{filename[0:-3]}')
