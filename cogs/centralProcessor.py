@@ -244,7 +244,7 @@ class Chassis(commands.Cog):
             # If stream is False, source will be a discord.FFmpegPCMAudio with a VolumeTransformer.
             # TODO download cannot add the same song to the playlist twice because the file is locked for download
             #      may need to implement the download at the time the song will be played or something
-            source = await YTDLSource.from_url(ctx, music["url"], loop=self.bot.loop, stream=True, playnow=False)
+            source = await YTDLSource.from_url(ctx, music["url"], loop=self.bot.loop, stream=False, playnow=False)
 
             await player.queue.put(source)
 
