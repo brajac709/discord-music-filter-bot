@@ -3,6 +3,8 @@ tokenfile.txt
 discord_backup_codes.txt
 database.txt
 *.m4a
+logfile.txt
+local_examples/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
