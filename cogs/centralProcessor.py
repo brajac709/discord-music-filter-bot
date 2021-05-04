@@ -5,6 +5,7 @@ import musicDatabase as db
 import json
 import youtube_dl
 import sys, io
+import asyncio
 
 listenerChannelName = 'music'
 destChannelName = 'music-aggregation'
@@ -91,6 +92,8 @@ class Chassis(commands.Cog):
         # TODO use TextDatabase for now.  change to SQL implementation later
         self.database = db.TextDatabase() 
 
+        self.next = asyncio.Event()
+
     @commands.Cog.listener()
     async def on_ready(self):
         print('Logged in as {0.user}'.format(self.bot))
@@ -107,6 +110,11 @@ class Chassis(commands.Cog):
     async def hello(self, ctx):
         """Prints 'Hello' in the channel"""
         await ctx.send('Hello!')
+
+    def _afterPlay(self, error):
+        self.bot.loop.call_soon_threadsafe(self.next.set)
+        if error:
+            raise error
 
     # TODO make sure download and play, whatever library, are using hardware accelerated transcoding
     @commands.command()
@@ -136,9 +144,15 @@ class Chassis(commands.Cog):
             async with ctx.typing():
                 musicChannel = ctx.voice_client
                 if musicChannel:
+                    self.next.clear()
                     player = await YTDLSource.from_url(ctx, music["url"], loop=self.bot.loop)
-                    musicChannel.play(player)
+                    musicChannel.play(player, after=self._afterPlay)
             await ctx.send('Now Playing: {}'.format(player.title))
+
+            await self.next.wait()
+            await ctx.send(f'Done Playing: {player.title}')
+            await ctx.voice_client.disconnect()
+
 
     @commands.command()
     async def stop(self, ctx):
@@ -187,6 +201,11 @@ class Chassis(commands.Cog):
     async def _exterminate(self, ctx: SlashContext):
         await ctx.send("Ooooh, you got me.")
         await self.bot.close()
+
+    @cog_ext.cog_slash(name="ERROR", guild_ids=guild_ids)
+    async def _testerror(self, ctx: SlashContext):
+        await ctx.send("Throwing Error")
+        raise Exception(f"Error thrown by user {ctx.author}")
 
 def setup(bot):
     bot.add_cog(Chassis(bot))
